@@ -57,19 +57,59 @@ WHERE CLIENT.CLIENTNO IN (
 		ORDER BY AMOUNT DESC
 	)
 WHERE ROWNUM = 1)
-GROUP BY CLIENT.CLIENTNO, CLIENT.CNAME
-
+GROUP BY CLIENT.CLIENTNO, CLIENT.CNAME;
 
 /*---------------- Task 2b --------------------*/
 
 
+/* Write a SQL statement to create an Oracle trigger that applies a 15% discount to
+ * any future purchases made by the top client found in Task 2a.
+ * 
+ * Hint: Your trigger should use the value obtained from Task 2a. In particular,
+ * it should apply a 15% reduction to the purchase amount whenever a new purchase
+ * made by that top client is inserted into the PURCHASE table.
+ */
 
 
+/*---------------- Task 3a ---------------------*/
 
+/* Write a SQL statement to create a (regular) view called V_DEPT_AMOUNT that 
+ * lists the names  and  numbers of all the company departments together with the 
+ * maximum, minimum, average, and total purchase amount contributed by each of 
+ * those departments. 
+ */
 
+CREATE VIEW V_DEPT_AMOUNT AS
+SELECT EMP.DEPTNO, MAX(PURCHASE.AMOUNT) AS MAX_AMOUNT,
+MIN(PURCHASE.AMOUNT) AS MIN_AMOUNT, AVG(PURCHASE.AMOUNT) AS AVG_AMOUNT,
+DEPT.DNAME
+FROM EMP
+INNER JOIN PURCHASE
+ON EMP.EMPNO = PURCHASE.SERVEDBY
+INNER JOIN DEPT
+ON EMP.DEPTNO = DEPT.DEPTNO
+GROUP BY EMP.DEPTNO, DEPT.DNAME
+ORDER BY EMP.DEPTNO;
 
+/*-------------------------- Task 3b -----------------------*/
 
+/* Write a SQL statement to create a materialized view called MV_DEPT_AMOUNT
+ * that lists the same information as in Task 3a
+ */
 
+CREATE MATERIALIZED VIEW MV_DEPT_AMOUNT AS
+SELECT EMP.DEPTNO, MAX(PURCHASE.AMOUNT) AS MAX_AMOUNT,
+MIN(PURCHASE.AMOUNT) AS MIN_AMOUNT, AVG(PURCHASE.AMOUNT) AS AVG_AMOUNT,
+DEPT.DNAME
+FROM EMP
+INNER JOIN PURCHASE
+ON EMP.EMPNO = PURCHASE.SERVEDBY
+INNER JOIN DEPT
+ON EMP.DEPTNO = DEPT.DEPTNO
+GROUP BY EMP.DEPTNO, DEPT.DNAME
+ORDER BY EMP.DEPTNO;
+
+/*----------------------- Task 3c --------------------------*/
 
 
 
